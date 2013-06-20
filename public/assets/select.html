@@ -1,0 +1,270 @@
+<!doctype html>
+<html ng-app="Demo" ng-controller="DemoController">
+<head>
+	<meta charset="utf-8" />
+
+	<title>
+		Mixing Static And Dynamic Options In An AngularJS Select Menu
+	</title>
+</head>
+<body>
+
+	<h1>
+		Mixing Static And Dynamic Options In An AngularJS Select Menu
+	</h1>
+
+	<form>
+
+		<select
+			ng-model="selection"
+			ng-options="option.value as option.text for option in options">
+
+			<!-- You can have ONE default, null selection option. -->
+			<option value="">- - Make Selection - -</option>
+
+		</select>
+
+		<button type="button" ng-click="selectJoanna()">
+			Select Joanna
+		</button>
+
+		<button type="button" ng-click="selectNull()">
+			Select null
+		</button>
+
+	</form>
+
+	<p ng-show="selectedFriend">
+
+		{{ selectedFriend.id }} - {{ selectedFriend.name }}
+
+	</p>
+
+
+
+	<!-- Load jQuery and AngularJS from the CDN. -->
+	<script
+		type="text/javascript"
+		src="//code.jquery.com/jquery-1.9.1.min.js">
+	</script>
+	<script
+		type="text/javascript"
+		src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.4/angular.min.js">
+	</script>
+
+	<!-- Load the app module and its classes. -->
+	<script type="text/javascript">
+
+
+		// Define our AngularJS application module.
+		var demo = angular.module( "Demo", [] );
+
+
+		// -------------------------------------------------- //
+		// -------------------------------------------------- //
+
+
+		// I am the main controller for the application.
+		demo.controller(
+			"DemoController",
+			function( $scope ) {
+
+
+				// -- Define Scope Methods. ----------------- //
+
+
+				// I explicitly select Joanna just to demonstrate how
+				// the two-way data binding will behave. Once we
+				// select Joanna explicitly, the ngModel will reflect
+				// that change in the Select menu.
+				$scope.selectJoanna = function() {
+
+					$scope.selection = $scope.friends[ 1 ];
+
+				};
+
+
+				// One more demo to show how selection will be
+				// reflected in two-way data binding.
+				$scope.selectNull = function() {
+
+					$scope.selection = null;
+
+				};
+
+
+				// -- Define Scope Variables. --------------- //
+
+
+				// I am the "dynamic" data portion of the select menu.
+				// Dynamic in the sense that it may have come from a
+				// data source and we don't know who big the list is.
+				$scope.friends = [
+					{
+						id: 1,
+						name: "Tricia"
+					},
+					{
+						id: 2,
+						name: "Joanna"
+					},
+					{
+						id: 3,
+						name: "Sarah"
+					}
+				];
+
+
+				// I am the "static" data portion of the select menu.
+				// This will be hard-coded in our Controller and used
+				// to facilitate selection.
+				$scope.staticOptions = [
+					{
+						value: "random",
+						text: "Random Friend"
+					},
+					{
+						value: "hrule",
+						text: "- - -"
+					}
+				];
+
+
+				// When it comes to populating the Select options,
+				// we can't simply feed in the collection of friends
+				// because, well, that's not what that list is. Sure,
+				// it *contains* friends; but, it's NOT a list of
+				// friends. As such, we need to create a separate list
+				// of options that houses BOTH our dynamic data and
+				// our static data.
+				//
+				// As we do this, we want to map Friend collection
+				// onto a collection that mimics the Value/Text
+				// structure of our other options. This will make
+				// rendering the list easier.
+				$scope.options = $scope.staticOptions.concat(
+					$.map(
+						$scope.friends,
+						function( friend ) {
+
+							// NOTE: "Value" here will reference our
+							// friend object, which will be mirrored
+							// in the selection variable.
+							return({
+								value: friend,
+								text: friend.name
+							});
+
+						}
+					)
+				);
+
+
+				// Since the select list is NOT just a list of
+				// friends, we have to differentiate between our
+				// list of friends and our selection.
+				$scope.selection = null;
+				$scope.selectedFriend = null;
+
+
+				// -- Define Scope Events. ------------------ //
+
+
+				// As the select menu changes, it will change our
+				// selection. When that happens, we have to map that
+				// change onto our Friends collection.
+				$scope.$watch(
+					"selection",
+					function( value ) {
+
+						// No "valid" value was selected.
+						if ( value === "hrule" ) {
+s
+							// Reset the selection
+							$scope.selection = null;
+
+						// A random friend was selected.
+						} else if ( value === "random" ) {
+
+							var index = Math.floor( Math.random() * 3 );
+
+							$scope.selection = $scope.friends[ index ];
+
+						// NULL or an actual friend was selected.
+						// In either case, we can use the selection
+						// value as our selected friend.
+						} else {
+
+							$scope.selectedFriend = $scope.selection;
+
+						}
+
+					}
+				);
+
+
+			}
+		);
+
+
+	</script>
+
+</body>
+</html>
+
+<!doctype html>
+<html ng-app>
+  <head>
+    <script src="http://code.angularjs.org/1.0.6/angular.min.js"></script>
+    <script src="script.js"></script>
+    <meta charset='utf-8'>
+
+  </head>
+  <body>
+    <div ng-controller="MyCntrl">
+
+    
+      Color grouped by shade:
+      <select ng-model="color" ng-options="c.name group by c.shade for c in colors">
+      </select><br/>
+
+<!-- 		<select class='span5' id='ad-category'>
+			<option selected='selected' value='invalid'>-- Выберите раздел --</option>
+			<optgroup label='недвижимость'>
+				<option value='nko' data-group-id='real_estate'>коммерческая</option>
+				<option value='nga' data-group-id='real_estate'>гаражи и стоянки</option>
+			</optgroup>
+			<optgroup label='транспорт'>
+			<option value='aup' data-group-id='transportation'>автомобили - частные</option>
+                <option value='aud' data-group-id='transportation'> автомобили - дилерские</option>
+                <option value='aut' data-group-id='transportation'>автозапчасти</option>
+            </optgroup>
+            <optgroup label='разное'>
+                <option value='rso' data-group-id='etc'>события</option>
+            </optgroup>
+        </select>
+ -->
+
+    
+    
+      Select <a href ng-click="color={name:'not in list'}">bogus</a>.<br>
+      <hr/>
+      Currently selected: {{ {selected_color:color}  }}
+      <div style="border:solid 1px black; height:20px"
+           ng-style="{'background-color':color.name}">
+      </div>
+    </div>
+    <script>
+    function MyCntrl($scope) {
+	  $scope.colors = [
+	    {name:'black', shade:'dark'},
+	    {name:'white', shade:'light'},
+	    {name:'red', shade:'dark'},
+	    {name:'blue', shade:'dark'},
+	    {name:'yellow', shade:'light'}
+	  ];
+	  $scope.color = $scope.colors[2]; // red
+	}
+    </script>
+  </body>
+</html>

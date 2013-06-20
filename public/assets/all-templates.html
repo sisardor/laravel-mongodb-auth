@@ -1,0 +1,175 @@
+<script type="text/ng-template" id="form_aup.html">
+<div>
+    <div>
+        <h3>Марка</h3>
+        <input ng-model="ad.auto_make" id='ad-transportation-make' class="span2" type="text">
+    </div>
+    
+    
+    <div>
+        <h3>Модель</h3>
+        <input ng-model="ad.auto_model" id='ad-transportation-model' class="span2" type="text">
+    </div>
+    
+    
+    <div>
+        <h3>Год</h3>
+        <input ng-model="ad.auto_year" id='ad-transportation-year' class="span1" type="text">
+    </div>
+    
+    
+    <div>
+        <h3>Пробег</h3>
+        <div class='input-append'>
+            <input ng-model="ad.auto_total_mile" id='ad-transportation-mileage' class='span2' type='text' value=''/><span class="add-on">км.</span>
+        </div>
+    </div>
+</div>
+</script>
+
+
+
+
+
+<script type="text/ng-template" id="form_nko.html">
+<div>
+	<div>
+		<h3>Комнат</h3>
+		<div class="btn-group" data-toggle="buttons-radio" id='ad-realestate-rooms'>
+		  <button class="btn active" ng-click="numberOfRooms(0)">0</button>
+		  <button class="btn" ng-click="numberOfRooms(1)">1</button>
+		  <button class="btn" ng-click="numberOfRooms(2)">2</button>
+		  <button class="btn" ng-click="numberOfRooms(3)">3</button>
+		  <button class="btn" ng-click="numberOfRooms(4)">4</button>
+		  <button class="btn" ng-click="numberOfRooms(5)">5</button>
+		  <button class="btn" ng-click="numberOfRooms(6)">6</button>
+		  <button class="btn" ng-click="numberOfRooms(7)">7</button>
+		  <button class="btn" ng-click="numberOfRooms(8)">8</button>
+		  <button class="btn" ng-click="numberOfRooms(9)">9</button>
+		  <button class="btn" ng-click="numberOfRooms(10)">10+</button>
+		</div>
+	</div>
+	
+	
+	<div>
+		<h3>Жив. Площадь</h3>
+		<div class="input-append">
+	        <input ng-model="ad.real_square" id='ad-realestate-living-area' class="span2" type="text"><span class="add-on">м<sup>2</sup></span>
+	    </div>
+	</div>
+	
+	<div>
+		<h3>Площадь Земли</h3>
+		<div>
+			<input ng-model="ad.land_area" id='ad-realestate-area' type='text' class='span2' value=''/><span class="add-on">соток</span>
+		</div>
+	</div>
+</div>
+</script>
+
+
+
+
+
+<script type="text/ng-template" id="table.html">
+<div>
+<table>
+  <tr>
+    <th>title</th>
+    <th>price</th>
+    <th>text</th>
+  </tr>
+  <tr ng-repeat="ad in ads">
+    <td><a href="#/view/{{ad._id.$id}}">{{ad.title | truncate:20 }}</a></td>
+    <td>{{ad.price}}</td>
+    <td>{{ad.text | truncate:35 }}</td>
+    <td><a href="#/edit/{{ad._id.$id}}">edit </a></td>
+  </tr>
+</table>
+</div>
+</script>
+
+
+
+
+
+<script type="text/ng-template" id="single.html">
+<select id="my_form" 
+	ng-model="option" 
+	ng-options="c.category group by c.group for c in options"
+	options-disabled="c.isinuse for c in options" >
+			<option>- - Make Selection - -</option>
+		</select> {{template.url}}
+
+		<div >
+			<form ng-submit="submit()" novalidate class="simple-form">
+				<h3>Заголовок</h3>
+		         	<input type='text' ng-model="ad.title"/>
+		        <h3>Цена</h3>
+					<input type="text"  ng-model="ad.price"/>
+
+				<div ng-include src="template.url"></div>
+
+				<h3>Подробности</h3>
+		        	<textarea ng-model="ad.text" id='ad-description' class='span12' style='min-height:300px; resize:vertical;'>{{ad.text}}</textarea>
+
+		        <button ng-click="reset()">RESET</button>
+        		<button ng-click="update(ad)">SAVE</button>
+
+	        </form>
+	              	
+	              	<pre>form = {{ad | json}}</pre>
+      				<pre>master = {{master | json}}</pre>
+         </div>
+</script>
+
+
+
+
+
+<script type="text/ng-template" id="single_view.html">
+<div>
+	<h1>{{ad.title}}</h1>
+	<p>Price: {{ad.price}}</p>
+	<p>{{ad.auto_make || ad.land_area}}</p>
+	<p>{{ad.auto_model || ad.real_square}}</p>
+	<p>{{ad.auto_year}}</p>
+	<p>{{ad.auto_total_mile}}</p>
+	<p>{{ad.text}}</p>
+</div>
+
+<div> 
+<pre><code>ad = {{ad | json}}</code></pre>
+</div>
+</script>
+
+
+
+
+<script type="text/ng-template" id="add.html">
+<select ng-model="option" ng-options="c.category group by c.group for c in options">
+			<option value="">- - Make Selection - -</option>
+		</select> {{template.url}}
+
+		<div >
+			<form ng-submit="submit()" novalidate class="simple-form">
+				<h3>Заголовок</h3>
+		         	<input type='text' ng-model="ad.title"/>
+		        <h3>Цена</h3>
+					<input type="text"  ng-model="ad.price"/>
+
+				<div ng-include src="template.url"></div>
+
+				<h3>Подробности</h3>
+		        	<textarea ng-model="ad.text" id='ad-description' class='span12' style='min-height:300px; resize:vertical;'>{{ad.text}}</textarea>
+
+		        <button ng-click="reset()">RESET</button>
+        		<button ng-click="update(ad)">SAVE</button>
+
+	        </form>
+	              	
+	        <pre>form = {{ad | json}}</pre>
+      		<pre>master = {{master | json}}</pre>
+         </div>
+</script>
+

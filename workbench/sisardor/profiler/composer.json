@@ -1,0 +1,20 @@
+{
+    "name": "sisardor/profiler",
+    "description": "",
+    "authors": [
+        {
+            "name": "sisardor",
+            "email": "sisardor@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.0.x"
+    },
+    "autoload": {
+        "psr-0": {
+            "Sisardor\\Profiler": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
