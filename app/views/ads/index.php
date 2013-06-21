@@ -24,6 +24,7 @@
 
         <div ng-app="myAds">
 		  <h1>My Ads</h1>
+		  <div id="loading">Loading...</div>
 		  <a href="#/new"><button>Add new</button></a><br>
 		  <div ng-view></div>
 
@@ -79,13 +80,36 @@
 	  };
 	});
 
-	demo.config(function($routeProvider) {
+	demo.config(function($routeProvider,$httpProvider) {
 		$routeProvider
 		      .when('/view/:name', { controller:'Single', templateUrl:'single_view.html'})
 		      .when('/edit/:name', { controller:'Edit', templateUrl:'single.html'})
 		      .when('/new', { controller: 'Add', templateUrl: 'add.html'})
 		      .when('/', { controller:'MainCtrl', templateUrl:'table.html'});
+		$httpProvider.responseInterceptors.push('myHttpInterceptor');
+        var spinnerFunction = function (data, headersGetter) {
+            // todo start the spinner here
+            $('#loading').show();
+            return data;
+        };
+        $httpProvider.defaults.transformRequest.push(spinnerFunction);
 	});
+	demo.factory('myHttpInterceptor', function ($q, $window) {
+        return function (promise) {
+            return promise.then(function (response) {
+                // do something on success
+                // todo hide the spinner
+                $('#loading').hide();
+                return response;
+
+            }, function (response) {
+                // do something on error
+                // todo hide the spinner
+                $('#loading').hide();
+                return $q.reject(response);
+            });
+        };
+    });
 
 	/*===============================*/
 	angular.module('filters', []).filter('truncate', function () {

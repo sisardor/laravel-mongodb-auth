@@ -10,6 +10,16 @@ button {
   list-style-type: none;
 }
 */
+
+    #loading {
+    left: 45%;
+    top: 82px;
+    background: gold;
+    padding: 0.3em;
+    font-weight: bold;
+    position: absolute;
+     }
+
 pre, code {
     background-color:#ff9;;
  padding:10px;
